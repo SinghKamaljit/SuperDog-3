@@ -203,7 +203,7 @@ moralText = r2.ok ? await r2.text() : '';
 // HARD-WIRED IMAGE SYSTEM WITH CORRECT JAVASCRIPT TEMPLATE LITERALS
 function imageFor(frame) {
 if (frame === 1) return 'frame1.png';
-if (frame === TOTAL) return frame${TOTAL}.png; return ``${frame}.png;
+if (frame === TOTAL) return `frame${TOTAL}.png`; return `frame${frame}.png`;
 }
 
 function show() {
@@ -226,7 +226,7 @@ document.getElementById('btn-back').textContent = n === 0 ? '⌂ Home' : '← Ba
 document.getElementById('btn-next').textContent = n === TOTAL - 1 ? 'Finish ✓' : 'Next →';
 
 // Audio still tracks linearly (1.mp3, 2.mp3, etc.)
-audio.src = ${frame}.mp3;
+audio.src = `${frame}.mp3`;
 audio.load();
 audio.play().catch(() => {});
 }
