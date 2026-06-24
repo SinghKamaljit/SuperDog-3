@@ -71,7 +71,6 @@ display: flex;
 flex-direction: column;
 }
 
-/* 3:4 image layout */
 .img-wrap {
 width: 100%;
 aspect-ratio: 3 / 4;
@@ -86,7 +85,6 @@ object-fit: cover;
 display: block;
 }
 
-/* Badge */
 .badge {
 position: absolute;
 top: 10px;
@@ -104,7 +102,6 @@ font-weight: bold;
 color: #3a6a08;
 }
 
-/* Caption box */
 .caption {
 padding: 14px 16px;
 display: flex;
@@ -121,7 +118,6 @@ text-align: center;
 font-weight: 500;
 }
 
-/* Navigation layout */
 .nav {
 display: flex;
 gap: 10px;
@@ -171,19 +167,7 @@ cursor: pointer;
 <audio id="audio"></audio>
 
 <script>
-// ═══════════════════════════════════
-// DYNAMIC STORY ENGINE (PPT FACTORY)
-// ───────────────────────────────────
-// frame1.png — First frame image
-// [TOTAL].png — Last frame image (e.g., frame15.png)
-// 2.png...[N-1] — Middle asset images
-// 1.mp3...[N].mp3— Audio clips mapped per slide
-// frames.txt — Contains just the raw slide total count (e.g., 15)
-// intro.txt — Narrative for slide 1
-// moral.txt — Narrative for the final slide
-// ═══════════════════════════════════
-
-let TOTAL = 8; // Fallback default if config file encounters an error
+let TOTAL = 8; // Safe fallback
 let n = 0;
 let introText = '';
 let moralText = '';
@@ -191,49 +175,45 @@ const audio = document.getElementById('audio');
 const capBox = document.getElementById('caption-box');
 const capText = document.getElementById('caption-text');
 
-// Async asset resolution with safe error catches to avoid freezing runtime
+// Highly structured configuration loader to guarantee execution
 async function loadStoryConfig() {
-// 1. Resolve frame constraint mapping
+// Read frames count config safely
 try {
 const response = await fetch('frames.txt');
 if (response.ok) {
 const countStr = await response.text();
-const parsed = parseInt(countStr.trim(), 10);
+// Clean up string completely to remove spaces or newlines
+const parsed = parseInt(countStr.replace(/\s/g, ''), 10);
 if (!isNaN(parsed) && parsed > 0) {
 TOTAL = parsed;
 }
 }
 } catch(e) {
-console.warn("frames.txt failed to parse. Defaulting to standard 8-frame model.");
 TOTAL = 8;
 }
 
-// 2. Resolve target introduction text
+// Read narrative texts safely
 try {
-const response = await fetch('intro.txt');
-introText = response.ok ? await response.text() : '';
+const r1 = await fetch('intro.txt');
+introText = r1.ok ? await r1.text() : '';
 } catch(e) { introText = ''; }
 
-// 3. Resolve target moral text
 try {
-const response = await fetch('moral.txt');
-moralText = response.ok ? await response.text() : '';
+const r2 = await fetch('moral.txt');
+moralText = r2.ok ? await r2.text() : '';
 } catch(e) { moralText = ''; }
 }
 
-// Dynamically computes correct asset strings depending on contextual slide location
 function imageFor(frame) {
 if (frame === 1) return 'frame1.png';
 if (frame === TOTAL) return frame${TOTAL}.png; return ``${frame}.png;
 }
 
-// UI State Synchronization
 function show() {
 const frame = n + 1;
 document.getElementById('img').src = imageFor(frame);
 document.getElementById('badge').textContent = frame;
 
-// Caption Display logic — explicitly isolated to Slide 1 and Slide N
 if (frame === 1) {
 capText.textContent = introText;
 capBox.classList.remove('hidden');
@@ -245,11 +225,9 @@ capText.textContent = '';
 capBox.classList.add('hidden');
 }
 
-// Adaptive component label strings
 document.getElementById('btn-back').textContent = n === 0 ? '⌂ Home' : '← Back';
 document.getElementById('btn-next').textContent = n === TOTAL - 1 ? 'Finish ✓' : 'Next →';
 
-// Core audio stream initialization
 audio.src = ${frame}.mp3;
 audio.load();
 audio.play().catch(() => {});
@@ -279,7 +257,7 @@ document.getElementById('card').classList.add('hidden');
 document.getElementById('start-screen').classList.remove('hidden');
 }
 
-// Initial structural load
+// Kick off config extraction immediately at runtime
 loadStoryConfig();
 
 if ('serviceWorker' in navigator) {
