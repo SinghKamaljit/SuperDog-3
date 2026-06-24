@@ -203,7 +203,8 @@ moralText = r2.ok ? await r2.text() : '';
 // HARD-WIRED IMAGE SYSTEM WITH CORRECT JAVASCRIPT TEMPLATE LITERALS
 function imageFor(frame) {
 if (frame === 1) return 'frame1.png';
-if (frame === TOTAL) return `frame${TOTAL}.png`; return `frame${frame}.png`;
+if (frame === TOTAL) return `frame${TOTAL}.png`;
+return `${frame}.png`;
 }
 
 function show() {
