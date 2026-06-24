@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#7cb342"/>
+<link rel="manifest" href="manifest.json"/>
+<title>SuperDog Stories</title>
+<style>
+• { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+background: #f0f7e6;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+font-family: 'Segoe UI', sans-serif;
+padding: 12px;
+}
+#start-screen {
+width: 100%;
+max-width: 400px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 16px;
+}
+.mascot-wrap {
+width: 100%;
+background: #fffdf4;
+border-radius: 18px;
+border: 3px solid #c8e6a0;
+overflow: hidden;
+box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+}
+.mascot-wrap img {
+width: 100%;
+display: block;
+aspect-ratio: 3 / 2;
+object-fit: cover;
+}
+.btn-start {
+width: 100%;
+padding: 18px;
+background: #7cb342;
+color: #fff;
+border: none;
+border-radius: 14px;
+font-size: 1.4rem;
+font-weight: bold;
+cursor: pointer;
+letter-spacing: 2px;
+box-shadow: 0 4px 14px rgba(124,179,66,0.45);
+}
+.btn-start:active { background: #5a9020; transform: scale(0.97); }
+#card {
+width: 100%;
+max-width: 400px;
+background: #fffdf4;
+border-radius: 18px;
+border: 3px solid #c8e6a0;
+box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+overflow: hidden;
+display: flex;
+flex-direction: column;
+}
+.img-wrap {
+width: 100%;
+aspect-ratio: 3 / 4;
+background: #e8f5d0;
+position: relative;
+overflow: hidden;
+}
+.img-wrap img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}
+.badge {
+position: absolute;
+top: 10px;
+left: 10px;
+width: 36px;
+height: 36px;
+background: rgba(255,255,255,0.90);
+border: 2px solid #7cb342;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 15px;
+font-weight: bold;
+color: #3a6a08;
+}
+.caption {
+padding: 14px 16px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #fefff8;
+border-top: 2px solid #d4edaa;
+}
+.caption p {
+font-size: 1rem;
+line-height: 1.5;
+color: #2c4a10;
+text-align: center;
+font-weight: 500;
+}
+.nav {
+display: flex;
+gap: 10px;
+padding: 14px 16px;
+background: #f0f7e6;
+border-top: 2px solid #c8e6a0;
+}
+.btn {
+flex: 1;
+padding: 13px 8px;
+border: none;
+border-radius: 10px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+}
+.btn:active { transform: scale(0.95); }
+.btn-back { background: #ddeebb; color: #3a6a08; }
+.btn-next { flex: 2; background: #7cb342; color: #fff; font-size: 16px; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div id="start-screen">
+<div class="mascot-wrap">
+<img src="mascot.png" alt="SuperDog and Peepal"/>
+</div>
+<button class="btn-start" onclick="start()">▶   START</button>
+</div>
+
+<!-- CARD -->
+<div id="card" class="hidden">
+<div class="img-wrap">
+<img id="img" src="" alt=""/>
+<div class="badge" id="badge">1</div>
+</div>
+<div class="caption" id="caption-box">
+<p id="caption-text"></p>
+</div>
+<div class="nav">
+<button class="btn btn-back" id="btn-back" onclick="back()">← Back</button>
+<button class="btn btn-next" id="btn-next" onclick="next()">Next →</button>
+</div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+let TOTAL = 8; // Fallback default
+let n = 0;
+let introText = '';
+let moralText = '';
+const audio = document.getElementById('audio');
+const capBox = document.getElementById('caption-box');
+const capText = document.getElementById('caption-text');
+
+async function loadStoryConfig() {
+try {
+const countStr = await (await fetch('frames.txt')).text();
+const parsed = parseInt(countStr.trim(), 10);
+if (!isNaN(parsed) && parsed > 0) TOTAL = parsed;
+} catch(e) { TOTAL = 8; }
+
+try { introText = await (await fetch('intro.txt')).text(); } catch(e) { introText = ''; }
+try { moralText = await (await fetch('moral.txt')).text(); } catch(e) { moralText = ''; }
+}
+
+function imageFor(frame) {
+if (frame === 1) return 'frame1.png';
+if (frame === TOTAL) return frame${TOTAL}.png; return ``${frame}.png;
+}
+
+function show() {
+const frame = n + 1;
+document.getElementById('img').src = imageFor(frame);
+document.getElementById('badge').textContent = frame;
+
+if (frame === 1) {
+capText.textContent = introText;
+capBox.classList.remove('hidden');
+} else if (frame === TOTAL) {
+capText.textContent = moralText;
+capBox.classList.remove('hidden');
+} else {
+capText.textContent = '';
+capBox.classList.add('hidden');
+}
+
+document.getElementById('btn-back').textContent = n === 0 ? '⌂ Home' : '← Back';
+document.getElementById('btn-next').textContent = n === TOTAL - 1 ? 'Finish ✓' : 'Next →';
+
+audio.src = ${frame}.mp3;
+audio.load();
+audio.play().catch(() => {});
+}
+
+function start() {
+n = 0;
+document.getElementById('start-screen').classList.add('hidden');
+document.getElementById('card').classList.remove('hidden');
+show();
+}
+
+function next() {
+if (n < TOTAL - 1) { n++; show(); }
+else { home(); }
+}
+
+function back() {
+if (n > 0) { n--; show(); }
+else { home(); }
+}
+
+function home() {
+audio.pause();
+audio.src = '';
+document.getElementById('card').classList.add('hidden');
+document.getElementById('start-screen').classList.remove('hidden');
+}
+
+loadStoryConfig();
+
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

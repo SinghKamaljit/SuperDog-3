@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+
+  <!-- Background — warm earth green -->
+  <rect width="512" height="512" rx="110" fill="#4a7a10"/>
+
+  <!-- Subtle radial glow behind character -->
+  <radialGradient id="glow" cx="50%" cy="52%" r="48%">
+    <stop offset="0%" stop-color="#7cb342" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#4a7a10" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="512" height="512" rx="110" fill="url(#glow)"/>
+
+  <!-- ── PEEPAL LEAVES (top, behind dog) ── -->
+  <!-- Large left leaf -->
+  <ellipse cx="148" cy="118" rx="72" ry="48" fill="#3a8a18" transform="rotate(-30 148 118)"/>
+  <ellipse cx="148" cy="118" rx="62" ry="38" fill="#4aaa22" transform="rotate(-30 148 118)"/>
+  <!-- Large right leaf -->
+  <ellipse cx="364" cy="118" rx="72" ry="48" fill="#3a8a18" transform="rotate(30 364 118)"/>
+  <ellipse cx="364" cy="118" rx="62" ry="38" fill="#4aaa22" transform="rotate(30 364 118)"/>
+  <!-- Centre leaf -->
+  <ellipse cx="256" cy="95" rx="58" ry="44" fill="#3a8a18"/>
+  <ellipse cx="256" cy="95" rx="48" ry="34" fill="#5aaa28"/>
+  <!-- Leaf veins -->
+  <line x1="256" y1="68" x2="256" y2="130" stroke="#2a7a10" stroke-width="2" opacity="0.5"/>
+  <line x1="148" y1="98" x2="168" y2="138" stroke="#2a7a10" stroke-width="1.5" opacity="0.4" transform="rotate(-30 148 118)"/>
+
+  <!-- ── SUPER DOG FACE ── -->
+  <!-- Head — warm golden brown -->
+  <ellipse cx="256" cy="290" rx="118" ry="108" fill="#D4924A"/>
+
+  <!-- Ear left — upright funnel -->
+  <path d="M 152 240 Q 138 185 148 155 Q 158 128 175 132 Q 190 136 188 168 Q 186 198 175 222 Z" fill="#B8773A"/>
+  <path d="M 158 238 Q 146 188 155 160 Q 162 136 175 138 Q 186 142 184 170 Q 182 198 172 220 Z" fill="#C4856A"/>
+
+  <!-- Ear right — upright funnel -->
+  <path d="M 360 240 Q 374 185 364 155 Q 354 128 337 132 Q 322 136 324 168 Q 326 198 337 222 Z" fill="#B8773A"/>
+  <path d="M 354 238 Q 366 188 357 160 Q 350 136 337 138 Q 326 142 328 170 Q 330 198 340 220 Z" fill="#C4856A"/>
+
+  <!-- Head shading — top darker -->
+  <ellipse cx="256" cy="248" rx="100" ry="50" fill="#B8773A" opacity="0.35"/>
+
+  <!-- Muzzle — slightly lighter, forward -->
+  <ellipse cx="256" cy="318" rx="72" ry="54" fill="#C8884A"/>
+  <ellipse cx="256" cy="330" rx="58" ry="36" fill="#D4A064" opacity="0.6"/>
+
+  <!-- Nose — prominent, black -->
+  <ellipse cx="256" cy="298" rx="28" ry="20" fill="#1A1008"/>
+  <ellipse cx="248" cy="292" rx="10" ry="7" fill="#3A2818" opacity="0.7"/>
+  <!-- Nostril line -->
+  <path d="M 238 308 Q 256 314 274 308" stroke="#0A0804" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Eyes — calm, intelligent, almond -->
+  <!-- Left eye -->
+  <ellipse cx="204" cy="262" rx="26" ry="22" fill="#1A1008"/>
+  <ellipse cx="204" cy="262" rx="18" ry="16" fill="#4A2C10"/>
+  <ellipse cx="210" cy="256" rx="9" ry="7" fill="#8B6030" opacity="0.8"/>
+  <ellipse cx="207" cy="254" rx="5" ry="4" fill="#C4904A" opacity="0.6"/>
+  <!-- Right eye -->
+  <ellipse cx="308" cy="262" rx="26" ry="22" fill="#1A1008"/>
+  <ellipse cx="308" cy="262" rx="18" ry="16" fill="#4A2C10"/>
+  <ellipse cx="314" cy="256" rx="9" ry="7" fill="#8B6030" opacity="0.8"/>
+  <ellipse cx="311" cy="254" rx="5" ry="4" fill="#C4904A" opacity="0.6"/>
+
+  <!-- Brow ridges — thoughtful, calm -->
+  <path d="M 182 242 Q 204 234 226 240" stroke="#5C3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 286 240 Q 308 234 330 242" stroke="#5C3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Whisker dots -->
+  <circle cx="218" cy="310" r="5" fill="#5C3A18" opacity="0.5"/>
+  <circle cx="210" cy="322" r="4" fill="#5C3A18" opacity="0.4"/>
+  <circle cx="294" cy="310" r="5" fill="#5C3A18" opacity="0.5"/>
+  <circle cx="302" cy="322" r="4" fill="#5C3A18" opacity="0.4"/>
+
+  <!-- Whiskers -->
+  <line x1="210" y1="308" x2="140" y2="295" stroke="#8B6A40" stroke-width="2.5" opacity="0.5"/>
+  <line x1="208" y1="318" x2="134" y2="315" stroke="#8B6A40" stroke-width="2" opacity="0.45"/>
+  <line x1="302" y1="308" x2="372" y2="295" stroke="#8B6A40" stroke-width="2.5" opacity="0.5"/>
+  <line x1="304" y1="318" x2="378" y2="315" stroke="#8B6A40" stroke-width="2" opacity="0.45"/>
+
+  <!-- Chest patch — lighter -->
+  <ellipse cx="256" cy="370" rx="55" ry="40" fill="#E8C07A" opacity="0.45"/>
+
+  <!-- ── SD BADGE (optional small star) ── -->
+  <circle cx="400" cy="400" r="44" fill="#D4924A"/>
+  <circle cx="400" cy="400" r="38" fill="#C8884A"/>
+  <text x="400" y="408" font-family="Georgia, serif" font-size="32" font-weight="bold"
+        fill="#fff" text-anchor="middle">SD</text>
+
+</svg>
