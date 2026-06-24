@@ -8,6 +8,7 @@
 <title>SuperDog Stories</title>
 <style>
 • { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
 background: #f0f7e6;
 min-height: 100vh;
@@ -18,6 +19,8 @@ justify-content: center;
 font-family: 'Segoe UI', sans-serif;
 padding: 12px;
 }
+
+/* ── START SCREEN ───────────── */
 #start-screen {
 width: 100%;
 max-width: 400px;
@@ -54,6 +57,8 @@ letter-spacing: 2px;
 box-shadow: 0 4px 14px rgba(124,179,66,0.45);
 }
 .btn-start:active { background: #5a9020; transform: scale(0.97); }
+
+/* ── STORY CARD ─────────────── */
 #card {
 width: 100%;
 max-width: 400px;
@@ -65,6 +70,8 @@ overflow: hidden;
 display: flex;
 flex-direction: column;
 }
+
+/* 3:4 image layout */
 .img-wrap {
 width: 100%;
 aspect-ratio: 3 / 4;
@@ -78,6 +85,8 @@ height: 100%;
 object-fit: cover;
 display: block;
 }
+
+/* Badge */
 .badge {
 position: absolute;
 top: 10px;
@@ -94,6 +103,8 @@ font-size: 15px;
 font-weight: bold;
 color: #3a6a08;
 }
+
+/* Caption box */
 .caption {
 padding: 14px 16px;
 display: flex;
@@ -109,6 +120,8 @@ color: #2c4a10;
 text-align: center;
 font-weight: 500;
 }
+
+/* Navigation layout */
 .nav {
 display: flex;
 gap: 10px;
@@ -128,12 +141,12 @@ cursor: pointer;
 .btn:active { transform: scale(0.95); }
 .btn-back { background: #ddeebb; color: #3a6a08; }
 .btn-next { flex: 2; background: #7cb342; color: #fff; font-size: 16px; }
+
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- START -->
 <div id="start-screen">
 <div class="mascot-wrap">
 <img src="mascot.png" alt="SuperDog and Peepal"/>
@@ -141,7 +154,6 @@ cursor: pointer;
 <button class="btn-start" onclick="start()">▶   START</button>
 </div>
 
-<!-- CARD -->
 <div id="card" class="hidden">
 <div class="img-wrap">
 <img id="img" src="" alt=""/>
@@ -159,7 +171,19 @@ cursor: pointer;
 <audio id="audio"></audio>
 
 <script>
-let TOTAL = 8; // Fallback default
+// ═══════════════════════════════════
+// DYNAMIC STORY ENGINE (PPT FACTORY)
+// ───────────────────────────────────
+// frame1.png — First frame image
+// [TOTAL].png — Last frame image (e.g., frame15.png)
+// 2.png...[N-1] — Middle asset images
+// 1.mp3...[N].mp3— Audio clips mapped per slide
+// frames.txt — Contains just the raw slide total count (e.g., 15)
+// intro.txt — Narrative for slide 1
+// moral.txt — Narrative for the final slide
+// ═══════════════════════════════════
+
+let TOTAL = 8; // Fallback default if config file encounters an error
 let n = 0;
 let introText = '';
 let moralText = '';
@@ -167,27 +191,49 @@ const audio = document.getElementById('audio');
 const capBox = document.getElementById('caption-box');
 const capText = document.getElementById('caption-text');
 
+// Async asset resolution with safe error catches to avoid freezing runtime
 async function loadStoryConfig() {
+// 1. Resolve frame constraint mapping
 try {
-const countStr = await (await fetch('frames.txt')).text();
+const response = await fetch('frames.txt');
+if (response.ok) {
+const countStr = await response.text();
 const parsed = parseInt(countStr.trim(), 10);
-if (!isNaN(parsed) && parsed > 0) TOTAL = parsed;
-} catch(e) { TOTAL = 8; }
-
-try { introText = await (await fetch('intro.txt')).text(); } catch(e) { introText = ''; }
-try { moralText = await (await fetch('moral.txt')).text(); } catch(e) { moralText = ''; }
+if (!isNaN(parsed) && parsed > 0) {
+TOTAL = parsed;
+}
+}
+} catch(e) {
+console.warn("frames.txt failed to parse. Defaulting to standard 8-frame model.");
+TOTAL = 8;
 }
 
+// 2. Resolve target introduction text
+try {
+const response = await fetch('intro.txt');
+introText = response.ok ? await response.text() : '';
+} catch(e) { introText = ''; }
+
+// 3. Resolve target moral text
+try {
+const response = await fetch('moral.txt');
+moralText = response.ok ? await response.text() : '';
+} catch(e) { moralText = ''; }
+}
+
+// Dynamically computes correct asset strings depending on contextual slide location
 function imageFor(frame) {
 if (frame === 1) return 'frame1.png';
 if (frame === TOTAL) return frame${TOTAL}.png; return ``${frame}.png;
 }
 
+// UI State Synchronization
 function show() {
 const frame = n + 1;
 document.getElementById('img').src = imageFor(frame);
 document.getElementById('badge').textContent = frame;
 
+// Caption Display logic — explicitly isolated to Slide 1 and Slide N
 if (frame === 1) {
 capText.textContent = introText;
 capBox.classList.remove('hidden');
@@ -199,9 +245,11 @@ capText.textContent = '';
 capBox.classList.add('hidden');
 }
 
+// Adaptive component label strings
 document.getElementById('btn-back').textContent = n === 0 ? '⌂ Home' : '← Back';
 document.getElementById('btn-next').textContent = n === TOTAL - 1 ? 'Finish ✓' : 'Next →';
 
+// Core audio stream initialization
 audio.src = ${frame}.mp3;
 audio.load();
 audio.play().catch(() => {});
@@ -231,6 +279,7 @@ document.getElementById('card').classList.add('hidden');
 document.getElementById('start-screen').classList.remove('hidden');
 }
 
+// Initial structural load
 loadStoryConfig();
 
 if ('serviceWorker' in navigator) {
