@@ -167,7 +167,7 @@ cursor: pointer;
 <audio id="audio"></audio>
 
 <script>
-let TOTAL = 8; // Safe fallback
+let TOTAL = 14; // Fallback configured for your 14 frames
 let n = 0;
 let introText = '';
 let moralText = '';
@@ -175,24 +175,20 @@ const audio = document.getElementById('audio');
 const capBox = document.getElementById('caption-box');
 const capText = document.getElementById('caption-text');
 
-// Highly structured configuration loader to guarantee execution
 async function loadStoryConfig() {
-// Read frames count config safely
 try {
 const response = await fetch('frames.txt');
 if (response.ok) {
 const countStr = await response.text();
-// Clean up string completely to remove spaces or newlines
 const parsed = parseInt(countStr.replace(/\s/g, ''), 10);
 if (!isNaN(parsed) && parsed > 0) {
 TOTAL = parsed;
 }
 }
 } catch(e) {
-TOTAL = 8;
+TOTAL = 14;
 }
 
-// Read narrative texts safely
 try {
 const r1 = await fetch('intro.txt');
 introText = r1.ok ? await r1.text() : '';
@@ -204,6 +200,7 @@ moralText = r2.ok ? await r2.text() : '';
 } catch(e) { moralText = ''; }
 }
 
+// HARD-WIRED IMAGE SYSTEM WITH CORRECT JAVASCRIPT TEMPLATE LITERALS
 function imageFor(frame) {
 if (frame === 1) return 'frame1.png';
 if (frame === TOTAL) return frame${TOTAL}.png; return ``${frame}.png;
@@ -228,6 +225,7 @@ capBox.classList.add('hidden');
 document.getElementById('btn-back').textContent = n === 0 ? '⌂ Home' : '← Back';
 document.getElementById('btn-next').textContent = n === TOTAL - 1 ? 'Finish ✓' : 'Next →';
 
+// Audio still tracks linearly (1.mp3, 2.mp3, etc.)
 audio.src = ${frame}.mp3;
 audio.load();
 audio.play().catch(() => {});
@@ -257,7 +255,6 @@ document.getElementById('card').classList.add('hidden');
 document.getElementById('start-screen').classList.remove('hidden');
 }
 
-// Kick off config extraction immediately at runtime
 loadStoryConfig();
 
 if ('serviceWorker' in navigator) {
